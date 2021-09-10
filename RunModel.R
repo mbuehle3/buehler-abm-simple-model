@@ -4,12 +4,17 @@ source("source/FunctionSource.R")
 
 # Initialize Paramenters
 
+# Landscape Parameters
 elevation = c(0,400)
 landscape = 150
 
+# Population Parameters
 nindv = 100
+pois.variance = 100
+
+# Movement Parameters
 nsteps = 5000
-move = 0.8
+prob.move = 0.8
 
 my.landscape <- CreateLandscape(elevation)
 my.landscape
@@ -19,9 +24,11 @@ my.population.test <- CreatePopulation(nindv,landscape)
 my.population.test
 PlotPopulation(my.population.test)
 
-multi.populations <- MultiplePopulations(my.population, 5)
+multi.populations <- MultiplePopulations(my.population.test, 5)
 multi.populations
-points(my.population[,1]/landscape, my.population[,2]/landscape, pch = 19, cex = 0.7)
+
+
+PlotPopulation(multi.populations)
 my.population <- CreatePopulation(nindv,landscape)
 
 # landscape.x
