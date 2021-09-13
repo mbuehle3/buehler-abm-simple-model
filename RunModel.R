@@ -1,5 +1,7 @@
 # source functions for the model 
 
+outdir = paste(getwd(),"/output/",sep = "")
+# outdir
 source("source/FunctionSource.R")
 
 # Initialize Paramenters
@@ -10,7 +12,9 @@ landscape = 300
 
 # Population Parameters
 nindv = 100
-pois.variance = 100
+pois.variance = 50
+# pop.num = 2 # Use this if you want to initialize more than one popualtion at a time
+
 
 # Movement Parameters
 nsteps = 5000
@@ -20,6 +24,11 @@ my.landscape <- CreateLandscape(elevation)
 
 my.population<- CreatePopulation(nindv,landscape)
 my.population
+
+# # Use this chunk if you want to create multiple populations all at once 
+# my.population <- MultiplePopulations(my.population, pop.num)
+# my.population
+
 PlotPopulation(my.population)
 
 parameters = expand.grid(elevation,landscape,nindv,nsteps,prob.move)
@@ -52,7 +61,3 @@ for(p in 1:nrow(parameters)){
     }
         rownames(pathways) = seq(1,nindvs,1)
 }
-# # Use this chunk if you want to create multiple populations all at once 
-# multi.populations <- MultiplePopulations(my.population.test, 5)
-# multi.populations
-# ?which()
