@@ -5,13 +5,22 @@
 MoveIndv=function(indv, land, move, nsteps, elevation, landscape){
   mvmt = indv[1,1:2] #x==1, y==2
   for(s in 1:nsteps){
-    cxpos = mvmt[(length(mvmt)-1)]
-    cypos = mvmt[length(mvmt)]
+    cxpos = mvmt[(length(mvmt)-1)] # store the current xpos for an individual
+    cypos = mvmt[length(mvmt)] # store the curren ypos for an individual
     
     #determine if indv will move randomly or will move to higher elevation
-    movehigh = sample(x=c(0,1), size=1, prob=c((1-move), move))
-    
+    movehigh = rbinom(1,1,move) # use a binomial distribution to determine whether an individual is going to move randomly or uphill    
     #random movement to adjacent cell/patch
+
+    # Moved this if statemetn to the top to get rid of individuals on the edge from the very beginning. If it is called later in the function, it can cause issues with ind that are out of bounds 
+    
+    if(cxpos>=(landscape-1) | cypos>=(landscape-1) | cxpos<=1 | cypos<=1){
+      #fill out remaining positions
+      mvmt=c(mvmt, rep(c(cxpos, cypos), (nsteps-((length(mvmt)/2)-1))))
+      
+      #exit loop
+      break
+    }
     if(movehigh==0){
       xpos = sample(c(-1,0,1), 1) + cxpos
       ypos = sample(c(-1,0,1), 1) + cypos
@@ -19,10 +28,12 @@ MoveIndv=function(indv, land, move, nsteps, elevation, landscape){
     
     #move to higher elevation
     if(movehigh==1){
-      #find highest elevation cell
+      #find highest elevation cell; highpt returns the column and row number of the array that contains the highest value, that is why we can't just assign xpos to highpt[,1],etc.
+
       highpt = which(land[(cxpos-1):(cxpos+1), (cypos-1):(cypos+1)] == max(land[(cxpos-1):(cxpos+1), (cypos-1):(cypos+1)]), arr.ind = TRUE)
       
-      #calculate new position (x and y values)
+      #calculate new position (x and y values); the output of highpt is going to be a number between 1 and 3 corresponding with the column and row number of the highest value in the array. 2,2 will be the start point, and so we base the move on what the first and second value of highpt is. 
+
       if(highpt[1]==1){xpos = cxpos - 1 }
       if(highpt[1]==2){xpos = cxpos }
       if(highpt[1]==3){xpos = cxpos + 1 }
@@ -44,13 +55,7 @@ MoveIndv=function(indv, land, move, nsteps, elevation, landscape){
     }
     
     #check to see if individual is at edge of landscape; if yes individual remains in same position
-    if(xpos>=(landscape-1) | ypos>=(landscape-1) | xpos<=1 | ypos<=1){
-      #fill out remaining positions
-      mvmt=c(mvmt, rep(c(xpos, ypos), (nsteps-((length(mvmt)/2)-1))))
-      
-      #exit loop
-      break
-    }
+
   }
   return(mvmt)
 }
