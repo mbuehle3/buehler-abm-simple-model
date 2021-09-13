@@ -6,4 +6,3 @@ The probability of an individual moving up hill is dictated by a binomial distri
 
 
 
-

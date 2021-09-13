@@ -1,24 +1,25 @@
 # source functions for the model 
 
-outdir = paste(getwd(),"/output/",sep = "")
+outdir = paste(getwd(),"/output/",sep = "") # assign the output directory if needed
 # outdir
-source("source/FunctionSource.R")
+source("source/FunctionSource.R") # location of the R file responsible for sourcing functions. Change PATH as needed for your machine. 
 
 # Initialize Paramenters
 
 # Landscape Parameters
-elevation = c(0,400)
-landscape = 300
+elevation = c(0,400) # set the min and max elevations of the landscape
+landscape = 300 # set the overall size of the landscape, this will be used for the x and y axis
 
 # Population Parameters
-nindv = 100
-pois.variance = 50
+nindv = 100 # how many individuals in the popualtion
+pois.variance = 50 # this is used for plotting the individuals on the landscape, the large the variance the more spread out they are, smaller variances will cluster them on the landscape
+
 # pop.num = 2 # Use this if you want to initialize more than one popualtion at a time
 
 
 # Movement Parameters
-nsteps = 5000
-prob.move = 0.8
+nsteps = 5000 # how long should the simluation run for?
+prob.move = 0.8 # this is the probabilty of success fed to the build in binomial distribution that dictates if an individual will move up in elevation or move randomly. The higher the value the more likely the indvidual is to move up hill. 
 
 my.landscape <- CreateLandscape(elevation)
 
@@ -34,6 +35,7 @@ PlotPopulation(my.population)
 parameters = expand.grid(elevation,landscape,nindv,nsteps,prob.move)
 parameters
 colnames(parameters) = c("elevation","landscape","nindvs","nsteps","move")
+
 parameters = parameters[parameters$elevation!=0,]
 
 for(p in 1:nrow(parameters)){
